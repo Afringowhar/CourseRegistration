@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>{{ course.name }}</h2>
+        <h5 class="text-muted">{{ course.code }}</h5>
+    </div>
+    <div class="card-body">
+        <p>{{ course.description }}</p>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <p><strong>Faculty:</strong> {{ course.faculty.user.get_full_name }}</p>
+                <p><strong>Department:</strong> {{ course.faculty.department }}</p>
+                <p><strong>Credits:</strong> {{ course.credits }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Start Date:</strong> {{ course.start_date }}</p>
+                <p><strong>End Date:</strong> {{ course.end_date }}</p>
+                <p><strong>Capacity:</strong> {{ course.capacity }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        {% if user.user_type == 'faculty' and course.faculty.user == user %}
+            <a href="{% url 'update-course' course.id %}" class="btn btn-warning">Edit</a>
+            <a href="{% url 'delete-course' course.id %}" class="btn btn-danger">Delete</a>
+        {% elif user.user_type == 'student' %}
+            {% if is_registered %}
+                <a href="{% url 'my-courses' %}" class="btn btn-primary">View Your Courses</a>
+            {% else %}
+                <a href="{% url 'register-courses' %}" class="btn btn-success">Register for This Course</a>
+            {% endif %}
+        {% endif %}
+        <a href="{% url 'course-list' %}" class="btn btn-secondary">Back to All Courses</a>
+    </div>
+</div>
+{% endblock %}
